@@ -1,3 +1,5 @@
+########################################### Packages
+
 import streamlit as st
 import pandas as pd
 import os
@@ -22,17 +24,16 @@ st.write('Author: Gabriele Durante')
 
 ########################################### Figure
 plt.figure(figsize=(10, 8))
-plt.xlabel('Date of event')
+plt.xlabel('Date of Death')
 plt.ylabel('Age')
-plt.title('Age vs. Date of event (Gender)')
-plt.xticks(rotation= 90, fontsize=8)
-plt.yticks(rotation = 0, fontsize=8)
-sns.scatterplot(data = fatalities_df, x = 'date_of_event', y= 'age',  hue='gender', palette='cividis', marker="+")
-every_nth = 45
-for n, label in enumerate(plt.gca().xaxis.get_ticklabels()):
-    if n % every_nth != 0:
-        label.set_visible(False)
+plt.title('Age vs. Date of Death (Gender)')
+plt.xticks(rotation = 45, fontsize=3)
+plt.yticks(rotation = 0, fontsize=3)
+
+sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='gender', palette='cividis')
+
 plt.legend(title='Gender', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
 
 ########################################### From plt to image function
 
@@ -41,6 +42,60 @@ def plt_to_image(plt):
     plt.savefig(buf, format='png', bbox_inches='tight')
     buf.seek(0)
     return buf
+
+graph_image = plt_to_image(plt)
+
+st.image(graph_image)
+
+########################################### Figure
+
+plt.figure(figsize=(10, 8))
+plt.xlabel('Date of Death')
+plt.ylabel('Age')
+plt.title('Age vs. Date of Death (Type of Injury)')
+plt.xticks(rotation = 45, fontsize=5)
+plt.yticks(rotation = 0, fontsize=5)
+
+sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='type_of_injury', palette='rocket')
+
+plt.legend(title='Type of Injury', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
+
+graph_image = plt_to_image(plt)
+
+st.image(graph_image)
+
+########################################### Figure
+
+plt.figure(figsize=(10, 8))
+plt.xlabel('Date of Death')
+plt.ylabel('Age')
+plt.title('Age vs. Date of Death (citizenship)')
+plt.xticks(rotation = 45, fontsize=5)
+plt.yticks(rotation = 0, fontsize=5)
+
+sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='citizenship', palette='Set2')
+
+plt.legend(title='Citizenship', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
+
+graph_image = plt_to_image(plt)
+
+st.image(graph_image)
+
+########################################### Figure
+
+plt.figure(figsize=(10, 8))
+plt.xlabel('Date of Death')
+plt.ylabel('Age')
+plt.title('Age vs. Date of Death (killed by)')
+plt.xticks(rotation = 45, fontsize=5)
+plt.yticks(rotation = 0, fontsize=5)
+
+sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age',  hue='killed_by', palette='husl')
+
+plt.legend(title='killed by:', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
 
 graph_image = plt_to_image(plt)
 
