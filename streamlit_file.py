@@ -141,7 +141,8 @@ elif current_tab == "Cleaning and Correlation":
 
     fig, ax = plt.subplots(figsize=(7, 5))
     sns.set(style="whitegrid")
-    heatmap = sns.heatmap(corr_matrix, annot=True, fmt=".2f", linewidths=.5, annot_kws={"size": 8}, ax=ax)
+    set_color = sns.color_palette("RdBu", as_cmap=True)
+    heatmap = sns.heatmap(corr_matrix, annot=True, fmt=".2f", linewidths=.5, annot_kws={"size": 8}, cmap=set_color, ax=ax)
     plt.title("Correlation between categorical variables")
     heatmap.set_xticklabels(heatmap.get_xticklabels(), fontsize=8)
     heatmap.set_yticklabels(heatmap.get_yticklabels(), fontsize=8)
