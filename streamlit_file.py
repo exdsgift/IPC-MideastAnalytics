@@ -20,18 +20,28 @@ current_tab = st.sidebar.selectbox("Summary", tab_names)
 ########################################### Main Titles and introduction
 if current_tab == "Introduction":
     st.markdown("<h1 style='text-align: center;'>Exploring Terrorism Victim Data: A Look into the Israeli-Palestinian Conflict</h1>", unsafe_allow_html=True)
-    st.subheader('Programming and Database Course Final Project')
-    st.write('Author: Gabriele Durante')
+    st.subheader('Programming and Database Final Project')
+    st.markdown('''
+                **Author**: Gabriele Durante\n
+                [GitHub](https://github.com/exdsgift)\t[LinkedIn](https://www.linkedin.com/in/gabrieledurante/)
+                ''')
 
-    st.write('The dataset is available at the following [Kaggle link](https://www.kaggle.com/datasets/willianoliveiragibin/fatalities-in-the-israeli-palestinian). It reports data on victims of terrorism in Israel and the war in Palestine.')
+    st.write('The dataset is available at the following [Kaggle link](https://www.kaggle.com/datasets/willianoliveiragibin/fatalities-in-the-israeli-palestinian). It reports data on victims of terrorism in Israel and the war in Palestine. This project aims to analyse events and fatalities by:')
     st.write('''
-         This project aims to analyse events and fatalities by
-
             - Year, month, and day of the month of events that led to fatalities
             - Victim profiles such as age, gender, citizenship, participation in hostilities etc
             - Event locations, location districts, and location regions
             - Type of injury, type of ammunition, and party responsible for killings, among others.
             ''')
+
+    selected_columns = st.multiselect('Explore the dataset by selecting columns', fatalities_df.columns)
+    if selected_columns:
+        filtered_df = fatalities_df.loc[:, selected_columns]
+        st.dataframe(filtered_df.head(51))
+    else:
+        st.dataframe(fatalities_df.head(51))
+    
+    
 ########################################### From plt to image function, design def function
 
     def plt_to_image(plt):
@@ -45,7 +55,7 @@ if current_tab == "Introduction":
 ########################################### insert containers using with to add graphs
 elif current_tab == "Cleaning and Correlation":
     
-    st.header("Cleaning and Correlation")
+    st.title("Cleaning and Correlation")
     st.subheader('Check Correlation using scatterplots')
     st.write('A first graphical analysis was carried out using scatterplots as a graphical method, so as to observe how the main variables relate to each other.')
     
@@ -60,7 +70,7 @@ elif current_tab == "Cleaning and Correlation":
 
     with tab1:
             plt.figure(figsize=(10, 8))
-            plt.xlabel('conflict from 2000 to 2023')
+            plt.xlabel('Victims from 2000 to 2023')
             plt.ylabel('Age')
             plt.title('Age vs. Date of Death (Gender)')
             plt.xticks(rotation = 45, fontsize=3)
@@ -74,7 +84,7 @@ elif current_tab == "Cleaning and Correlation":
     
     with tab2:
             plt.figure(figsize=(10, 8))
-            plt.xlabel('conflict from 2000 to 2023')
+            plt.xlabel('Victims from 2000 to 2023')
             plt.ylabel('Age')
             plt.title('Age vs. Date of Death (Type of Injury)')
             plt.xticks(rotation = 45, fontsize=5)
@@ -88,7 +98,7 @@ elif current_tab == "Cleaning and Correlation":
     
     with tab3:
             plt.figure(figsize=(10, 8))
-            plt.xlabel('conflict from 2000 to 2023')
+            plt.xlabel('Victims from 2000 to 2023')
             plt.ylabel('Age')
             plt.title('Age vs. Date of Death (citizenship)')
             plt.xticks(rotation = 45, fontsize=5)
@@ -102,7 +112,7 @@ elif current_tab == "Cleaning and Correlation":
     
     with tab4:
             plt.figure(figsize=(10, 8))
-            plt.xlabel('conflict from 2000 to 2023')
+            plt.xlabel('Victims from 2000 to 2023')
             plt.ylabel('Age')
             plt.title('Age vs. Date of Death (killed by)')
             plt.xticks(rotation = 45, fontsize=5)
@@ -174,6 +184,4 @@ elif current_tab == "Modelling":
 
 
 ########################################### test
-
-
 
