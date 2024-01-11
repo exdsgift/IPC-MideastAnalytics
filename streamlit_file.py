@@ -10,8 +10,8 @@ import plotly.express as px
 import folium 
 from wordcloud import WordCloud
 from io import BytesIO
+from streamlit_folium import st_folium
 from streamlit_folium import folium_static
-
 ########################################### Import Dataset and set tabs
 
 fatalities_df = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
@@ -57,46 +57,28 @@ if current_tab == "Introduction":
 elif current_tab == "Cleaning and Correlation": 
     st.title("Cleaning and Correlation")
    
-    st.subheader('Cleaning: NA values and substitutions') 
+    st.subheader('Cleaning: NA values and substitutions')
     st.write('Before proceeding with the analysis, the null values in the dataset were analyzed and then replaced or eliminated.')
-    code_block = """
-    {(fatalities_df['age'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['gender'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['took_part_in_the_hostilities'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['place_of_residence'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['place_of_residence_district'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['type_of_injury'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['ammunition'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    {(fatalities_df['notes'].isna().sum()/len(fatalities_df))*100:.2f}%")
-    """
-    st.code(code_block, language='python')
     
-    st.markdown('''
+    tab1, tab2, tab3, tab4 = st.tabs(["NA's values", "Cleaning", "-", "-"]) 
+    
+    #####################################
+    with tab1:
+    
+        columns_to_check = ['age', 'gender', 'took_part_in_the_hostilities', 'place_of_residence', 'place_of_residence_district', 'type_of_injury', 'ammunition', 'notes']
+        def calculate_na_percentage(column):
+            return (fatalities_df[column].isna().sum() / len(fatalities_df)) * 100
+        for column in columns_to_check:
+            percentage_na = calculate_na_percentage(column)
+            st.code(f"Percentage of {column} NA value: {percentage_na:.2f}%")
+
+    with tab2:
+        st.markdown('''
                 based on this information, the data will be rearranged as follows:
-- **Replace** missing values for the variable **age** with the **mean value** (1.16%).
-- Missing values for the variables **sex**, **place_of_residence**, **place_of_residence_district**, **type_of_location**, and **notes** are **replaced** with the **mode value**. this is so as not to change the distribution of the data too much.
-- **Remove** the variables **has_participated_in_hostilities**, **ammunition** from the variable itself. The percentage of null values is excessive and would not lead to useful information for the entire population of the dataset.
-                ''')
-    code_block2 = """
-    age_mean = fatalities_df['age'].mean()
-    fatalities_df['age'].fillna(age_mean, inplace=True)
-    
-    gender_mode = fatalities_df['gender'].mode()[0]
-    fatalities_df['gender'].fillna(gender_mode, inplace=True)
-    place_of_residence_mode = fatalities_df['place_of_residence'].mode()[0]
-    fatalities_df['place_of_residence'].fillna(place_of_residence_mode, inplace=True)
-    place_of_residence_district_mode = fatalities_df['place_of_residence_district'].mode()[0]
-    fatalities_df['place_of_residence_district'].fillna(place_of_residence_district_mode, inplace=True)
-    type_of_injury_mode = fatalities_df['type_of_injury'].mode()[0]
-    fatalities_df['type_of_injury'].fillna(type_of_injury_mode, inplace=True)
-    notes_mode = fatalities_df['notes'].mode()[0]
-    fatalities_df['notes'].fillna(notes_mode, inplace=True)
-    
-    fatalities_df.drop(['took_part_in_the_hostilities', 'ammunition'], axis=1, inplace=True)
-    """
-    st.code(code_block2, language='python') 
-    
-    
+                - **Replace** missing values for the variable **age** with the **mean value** (1.16%).
+                - Missing values for the variables **sex**, **place_of_residence**, **place_of_residence_district**, **type_of_location**, and **notes** are **replaced** with the **mode value**. this is so as not to change the distribution of the data too much.
+                - **Remove** the variables **has_participated_in_hostilities**, **ammunition** from the variable itself. The percentage of null values is excessive and would not lead to useful information for the entire population of the dataset.
+                                ''')
     
     
     
@@ -110,6 +92,7 @@ elif current_tab == "Cleaning and Correlation":
         return buf
 
     graph_image = plt_to_image(plt)
+    
     tab1, tab2, tab3, tab4 = st.tabs(["Gender", "Type of Injury", "Citizenship", "Killed by"])
 
     with tab1:
@@ -223,34 +206,10 @@ elif current_tab == "Exploratory Data Analysis":
         plt.savefig(buf, format='png', bbox_inches='tight')
         buf.seek(0)
         return buf
-    
-##################################### Nationalities graphs
-
-    st.subheader('Nationality graphs')
-
-    fatalities_df_2 = fatalities_df[~fatalities_df['citizenship'].isin(['Jordanian', 'American'])]
-    fatalities_df_2['citizenship'].value_counts()
-
-    plt.figure(figsize=(10,6))
-    sns.set(style = "white")
-    plt.title('Deaths by nationality (Palestinian and Israeli)')
-    plt.xlabel("citizenship")
-    plt.ylabel("fatalities")
-    plt.xticks(rotation = 0, fontsize=10)
-    plt.yticks(rotation = 45, fontsize=10)
-
-    custom_palette = sns.color_palette("viridis", n_colors=2)
-    plot1 = sns.countplot(x='citizenship', data = fatalities_df_2, palette = custom_palette, hue='citizenship', legend=False)
-
-    for p in plot1.patches:
-        plot1.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()),
-                    ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
-                    textcoords='offset points')
-    plt.show()
-    graph_image = plt_to_image(plt)
-    st.image(graph_image)
-    
-    
+    st.write('The first important piece of data investigated through a historical analysis of deaths is the trend regarding the deaths of Palestinians and Israelis, combined within a graph. One can already sense how there is a great disparity in these values and how there are major peaks during 2014, a year of high tension between the two countries. in fact, in this year, the conflict in Gaza between July and August caused the deaths of thousands of Palestinians and displaced about half a million people. Palestinian attacks on Israeli civilians and security forces increased, as did incidents of settler violence that resulted in Palestinian casualties and injuries.')
+    st.markdown('''
+                [TheGuardian](https://www.theguardian.com/world/2015/mar/27/israel-kills-more-palestinians-2014-than-any-other-year-since-1967) - [TheGuardian](https://www.theguardian.com/world/2024/jan/08/the-numbers-that-reveal-the-extent-of-the-destruction-in-gaza) - [United Nations](https://news.un.org/en/story/2015/06/502282)
+                ''')
     fatalities_df['date_of_death'] = pd.to_datetime(fatalities_df['date_of_death'])
     fatalities_df['year'] = fatalities_df['date_of_death'].dt.year
     fatality_by_year = fatalities_df.groupby('year').size().reset_index(name='fatalities')
@@ -300,6 +259,106 @@ elif current_tab == "Exploratory Data Analysis":
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
+    
+##################################### Nationalities graphs
+    st.subheader('Data on the nationality of the victims and murderers')
+    st.write('the first variables to be examined, were those inherent in the nationality of the victims and perpetrators. This is used to get an initial idea of the forces deployed by both countries.')
+    
+
+    
+    
+### tabs
+    tab1, tab2, tab3, tab4 = st.tabs(["Victims", "Perpetrators", "Weapons used", "Casualities by entity and type of injury"])
+
+### adding graphs for these tabs    
+    with tab1:
+            fatalities_df_2 = fatalities_df[~fatalities_df['citizenship'].isin(['Jordanian', 'American'])]
+            fatalities_df_2['citizenship'].value_counts()
+
+            plt.figure(figsize=(10,6))
+            sns.set(style = "white")
+            plt.title('Deaths by nationality (Palestinian and Israeli)')
+            plt.xlabel("citizenship")
+            plt.ylabel("fatalities")
+            plt.xticks(rotation = 0, fontsize=10)
+            plt.yticks(rotation = 45, fontsize=10)
+
+            custom_palette = sns.color_palette("viridis", n_colors=2)
+            plot1 = sns.countplot(x='citizenship', data = fatalities_df_2, palette = custom_palette, hue='citizenship', legend=False)
+
+            for p in plot1.patches:
+                plot1.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
+                            textcoords='offset points')
+            plt.show()
+            graph_image = plt_to_image(plt)
+            st.image(graph_image)
+            st.write('from this chart we observe that most of the victims are Palestinians, while the Israelis who died are a significant minority (about one-tenth of those Palestinians)')
+    
+    with tab2:
+            killed_count = fatalities_df['killed_by'].value_counts()
+            plt.figure(figsize=(10, 6))
+            custom_palette = sns.color_palette("viridis")
+            sns.set(style = "white")
+            plt.title('Victims for perpetrators of killings')
+            plt.xlabel('Responsible for the killings')
+            plt.ylabel('Total casualties')
+            plt.xticks(rotation = 0, fontsize=10)
+            plt.yticks(rotation = 45, fontsize=10)
+
+            bars = plt.bar(killed_count.index, killed_count.values)
+
+            for bar in bars:
+                yval = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom', fontsize=8)
+
+            plt.show()
+            graph_image = plt_to_image(plt)
+            st.image(graph_image)
+            st.write('Instead, studying the distribution of persecutors, we note how Israel carries out all killings through the army, while the among Palestinians there are only killings carried out by civilians. This is a great point of reflection on the difference in counteroffensive power.')
+
+    with tab3:
+            fatalities_df_original = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
+            ammunition_kll = fatalities_df_original['ammunition'].value_counts()
+            plt.figure(figsize=(10, 6))
+            sns.set(style="white", palette="Set2")
+
+            ax1 = ammunition_kll.head(10).plot(kind='bar')
+            plt.title('Most used weapons in conflict')
+            plt.xlabel('Weapons')
+            plt.ylabel('Deaths')
+            plt.xticks(rotation=90, fontsize=10)
+            plt.yticks(rotation=45, fontsize=10)
+
+            for p in ax1.patches:
+                ax1.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='center', xytext=(0, 10), textcoords='offset points', fontsize=8)
+            graph_image = plt_to_image(plt)
+            st.image(graph_image)
+            st.write('From what emerges from an analysis of the equipment used, we note how they can be traced back to urban and civil conflict. Note how the explosive belt killings are high, attributable to attacks on convoys usually.')                
+            
+    with tab4:
+            fatalities_df['casualty_count'] = 1
+            killed_injury = fatalities_df.groupby(['killed_by', 'type_of_injury'])['casualty_count'].sum().reset_index()
+            killed_injury_pivot = killed_injury.pivot(index='killed_by', columns='type_of_injury', values='casualty_count').fillna(0)
+            
+            plt.figure(figsize=(10, 6))
+            sns.set(style = "white",  palette = sns.color_palette("viridis_r"))
+
+            ax = killed_injury_pivot.plot(kind='bar', stacked=True)
+
+            plt.title('Distribution of casualties by Entity and type of injury')
+            plt.xlabel('Entity Responsible for Killings')
+            plt.ylabel('Total Casualties')
+            plt.xticks(rotation = 0, fontsize=10)
+            plt.yticks(rotation = 45, fontsize=10)
+
+            plt.legend(title='Type of Injury', bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.show()
+            graph_image = plt_to_image(plt)
+            st.image(graph_image)
+            st.write('from this chart it is clear that the Israelis mainly use modern weapons of war such as rockets and firearms, while the Palestinians still use more radical methods such as explosive belts and edged weapons to counterattack.')        
+
 
 ##################################### Gender graphs
 
@@ -315,9 +374,11 @@ elif current_tab == "Exploratory Data Analysis":
     plt.figure(figsize=(10,10))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.title('Most frequent words in the dataset notes')
+    plt.axis('off')
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
+    st.write('The graph you will see below is a WordCloud, which is a visual way to represent the most frequent words in a given dataset. In this case, the WordCloud was created based on the variable "Notes." This variable contains information about the dynamics of conflict-related deaths, and the largest words in the are those that appear most frequently in the notes. This can help to quickly identify the most common themes or terms associated with the dynamics of deaths in the conflict.')
 
 
 
@@ -351,6 +412,44 @@ elif current_tab == "Exploratory Data Analysis":
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
+    
+    ### Folium chart
+    
+    district_coords = {
+    'Gaza': [31.5, 34.466667],
+    'Hebron': [31.532569, 35.095388],
+    'Jenin': [32.457336, 35.286865],
+    'Nablus': [32.221481, 35.254417],
+    'Ramallah': [31.902922, 35.206209],
+    'Bethlehem': [31.705791, 35.200657],
+    'Tulkarm': [32.308628, 35.028537],
+    'Jericho': [31.857163, 35.444362],
+    'Rafah': [31.296866, 34.245536],
+    'Khan Yunis': [31.346201, 34.306286]
+    }
+    
+    district_fatalities = fatalities_df.groupby('event_location_district').size()
+    
+    def get_color(fatalities):
+        if fatalities > 500:
+            return 'red'
+        elif fatalities > 250:
+            return 'orange'
+        elif fatalities > 100:
+            return 'yellow'
+        else:
+            return 'green'
+    
+    base_map = folium.Map(location=[32, 34.75], zoom_start=8)
+    
+    for district, coords in district_coords.items():
+        fatalities = district_fatalities.get(district, 0)
+        folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
+        folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
+
+    folium.LayerControl().add_to(base_map)
+
+    st.data = st_folium(base_map, width=800, height=600)
     
 
 
