@@ -1,4 +1,4 @@
-# Data Science Project: Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
+# Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
 
 Welcome to the repository of the final project for the "Programming and Databases" course. This repository has been created to showcase a comprehensive analysis of terrorism victim data within the Israeli-Palestinian conflict. Below is an overview of the project, divided into three main phases: dataset cleaning, exploratory data analysis (EDA), and modeling using machine learning approaches.
 
