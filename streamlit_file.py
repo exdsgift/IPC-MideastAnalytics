@@ -117,7 +117,7 @@ elif current_tab == "Cleaning and Correlation":
             plt.xticks(rotation = 45, fontsize=5)
             plt.yticks(rotation = 0, fontsize=5)
             sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='type_of_injury', palette='rocket')
-            plt.legend(title='Type of Injury', bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.legend(title='Type of Injury',loc='upper right')
             plt.xticks([])
             plt.show()
             graph_image = plt_to_image(plt)
@@ -151,7 +151,7 @@ elif current_tab == "Cleaning and Correlation":
             graph_image = plt_to_image(plt)
             st.image(graph_image)
 
-    st.write('''
+    st.caption('''
          From the following scatterplots we can draw several conclusions:
             - a preliminary analysis shows that most of the victims are men, and a large number of deaths occurred between the years 2002 and 2008.
             - the leading cause of death is gunfire, regardless of the period or years of the victim. the second most common cause of death is from stabbing, hit by veichle, and explosion. The latter especially were prevalent between 2002 and 2008.
@@ -301,7 +301,7 @@ elif current_tab == "Exploratory Data Analysis":
             plt.show()
             graph_image = plt_to_image(plt)
             st.image(graph_image)
-            st.write('from this chart we observe that most of the victims are Palestinians, while the Israelis who died are a significant minority (about one-tenth of those Palestinians)')
+            st.caption('From this chart we observe that most of the victims are Palestinians, while the Israelis who died are a significant minority (about one-tenth of those Palestinians)')
     
     with tab2:
             killed_count = fatalities_df['killed_by'].value_counts()
@@ -320,7 +320,7 @@ elif current_tab == "Exploratory Data Analysis":
             plt.show()
             graph_image = plt_to_image(plt)
             st.image(graph_image)
-            st.write('Instead, studying the distribution of persecutors, we note how Israel carries out all killings through the army, while the among Palestinians there are only killings carried out by civilians. This is a great point of reflection on the difference in counteroffensive power.')
+            st.caption('Instead, studying the distribution of persecutors, we note how Israel carries out all killings through the army, while the among Palestinians there are only killings carried out by civilians. This is a great point of reflection on the difference in counteroffensive power.')
 
     with tab3:
             fatalities_df_original = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
@@ -338,7 +338,7 @@ elif current_tab == "Exploratory Data Analysis":
                             ha='center', va='center', xytext=(0, 10), textcoords='offset points', fontsize=8)
             graph_image = plt_to_image(plt)
             st.image(graph_image)
-            st.write('From what emerges from an analysis of the equipment used, we note how they can be traced back to urban and civil conflict. Note how the explosive belt killings are high, attributable to attacks on convoys usually.')                
+            st.caption('From what emerges from an analysis of the equipment used, we note how they can be traced back to urban and civil conflict. Note how the explosive belt killings are high, attributable to attacks on convoys usually.')                
             
     with tab4:
             fatalities_df['casualty_count'] = 1
@@ -356,7 +356,7 @@ elif current_tab == "Exploratory Data Analysis":
             plt.show()
             graph_image = plt_to_image(plt)
             st.image(graph_image)
-            st.write('from this chart it is clear that the Israelis mainly use modern weapons of war such as rockets and firearms, while the Palestinians still use more radical methods such as explosive belts and edged weapons to counterattack.')        
+            st.caption('From this chart it is clear that the Israelis mainly use modern weapons of war such as rockets and firearms, while the Palestinians still use more radical methods such as explosive belts and edged weapons to counterattack.')        
 
 
 
@@ -370,6 +370,7 @@ elif current_tab == "Exploratory Data Analysis":
 ##################################### Gender graphs
     st.divider()
     st.subheader('Data on biological sex of victims')
+    st.write('In a war, in addition to questioning the political and religious causes of the conflict, it is also important to question the protagonists of the conflict. In the following graphs we analyze the age of the victims and their biological sex, as well as go on to study the distribution function.')
 
     tab1, tab2, tab3 = st.tabs(["Violin", "Gender differences", "Distribution"])
     
@@ -382,7 +383,7 @@ elif current_tab == "Exploratory Data Analysis":
         sns.set(style="white")
         custom_palette = sns.color_palette("viridis", n_colors=2)
         sns.violinplot(data=fatalities_df, x="age", y='gender', hue = "gender", palette = custom_palette, legend=True)
-        plt.legend(title='Gender')
+        plt.legend(title='gender')
         plt.grid(True, axis='x')
         plt.show()
         graph_image = plt_to_image(plt)
@@ -513,7 +514,7 @@ elif current_tab == "Exploratory Data Analysis":
         folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
         folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
     folium.LayerControl().add_to(base_map)
-    st.data = st_folium(base_map, width=800, height=600)
+    st.data = st_folium(base_map, width=800, height=480)
     
 
 
