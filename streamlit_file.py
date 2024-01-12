@@ -81,7 +81,7 @@ elif current_tab == "Cleaning and Correlation":
                                 ''')
     
     
-    
+    st.divider() 
     st.subheader('Check Correlation using scatterplots')
     st.write('A first graphical analysis was carried out using scatterplots as a graphical method, so as to observe how the main variables relate to each other.')
     
@@ -103,7 +103,7 @@ elif current_tab == "Cleaning and Correlation":
             plt.xticks(rotation = 45, fontsize=3)
             plt.yticks(rotation = 0, fontsize=3)
             sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='gender', palette='cividis')
-            plt.legend(title='Gender', bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.legend(title= 'Gender')
             plt.xticks([])
             plt.show()
             graph_image = plt_to_image(plt)
@@ -131,7 +131,7 @@ elif current_tab == "Cleaning and Correlation":
             plt.xticks(rotation = 45, fontsize=5)
             plt.yticks(rotation = 0, fontsize=5)
             sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age', hue='citizenship', palette='Set2')
-            plt.legend(title='Citizenship', bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.legend(title='Citizenship')
             plt.xticks([])
             plt.show()
             graph_image = plt_to_image(plt)
@@ -145,7 +145,7 @@ elif current_tab == "Cleaning and Correlation":
             plt.xticks(rotation = 45, fontsize=5)
             plt.yticks(rotation = 0, fontsize=5)
             sns.scatterplot(data = fatalities_df, x = 'date_of_death', y= 'age',  hue='killed_by', palette='husl')
-            plt.legend(title='killed by:', bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.legend(title='killed by:')
             plt.xticks([])
             plt.show()
             graph_image = plt_to_image(plt)
@@ -159,7 +159,7 @@ elif current_tab == "Cleaning and Correlation":
             - from the last graph instead, it shows how most of the casualties were caused by Israeli security forces, while Palestinian citizens killed many Israelis early in the war when they rebelled against the Israeli government's expansionist policy.
              ''')
 ########################################### insert code of encoding and add the graph
-
+    st.divider()
     st.subheader('Correlation by encoding categorical variables')
     st.write("When variables are categorical (represented by labels or categories instead of numerical values) encoding is imperative. Encoding of categorical variables is the process of converting these variables into a numerical form without losing the informational meaning of the original categories. This step is crucial to enable the application of correlation calculation algorithms based on mathematical operations.")
     st.write('This analysis shows that there is a positive correlation between the location of the event and the country of residence, instead a particularly negative one between the citizenship of the victims and the instigator of the killing.')
@@ -210,6 +210,7 @@ elif current_tab == "Exploratory Data Analysis":
     st.markdown('''
                 [TheGuardian](https://www.theguardian.com/world/2015/mar/27/israel-kills-more-palestinians-2014-than-any-other-year-since-1967) - [TheGuardian](https://www.theguardian.com/world/2024/jan/08/the-numbers-that-reveal-the-extent-of-the-destruction-in-gaza) - [United Nations](https://news.un.org/en/story/2015/06/502282)
                 ''')
+    
     fatalities_df['date_of_death'] = pd.to_datetime(fatalities_df['date_of_death'])
     fatalities_df['year'] = fatalities_df['date_of_death'].dt.year
     fatality_by_year = fatalities_df.groupby('year').size().reset_index(name='fatalities')
@@ -218,7 +219,7 @@ elif current_tab == "Exploratory Data Analysis":
     plt.xlabel('years')
     plt.ylabel('deaths')
     plt.xticks(fatality_by_year['year'], rotation = 45, fontsize=10)
-    plt.yticks(rotation = 0, fontsize=10)
+    plt.yticks(rotation = 45, fontsize=10)
     viridis_palette = sns.color_palette('viridis', n_colors=3)
     selected_colors = [viridis_palette[0], viridis_palette[1], viridis_palette[2]]
     fatality_by_year = fatalities_df.groupby('year').size().reset_index(name='fatalities')
@@ -254,18 +255,28 @@ elif current_tab == "Exploratory Data Analysis":
     for i, txt in enumerate(israeli_fatalities_by_year['israeli_fatalities']):
         plt.annotate(txt, (israeli_fatalities_by_year['year'][i], txt), textcoords="offset points", xytext=(0, 5), ha='center', color='black', fontsize = 9)
 
-    plt.legend(title='Death Trend:', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.legend(title='Death Trend:')
     plt.grid(True, axis='y')
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 ##################################### Nationalities graphs
+    st.divider()
     st.subheader('Data on the nationality of the victims and murderers')
-    st.write('the first variables to be examined, were those inherent in the nationality of the victims and perpetrators. This is used to get an initial idea of the forces deployed by both countries.')
-    
-
-    
+    st.write('The first variables to be examined, were those inherent in the nationality of the victims and perpetrators. This is used to get an initial idea of the forces deployed by both countries.')
     
 ### tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Victims", "Perpetrators", "Weapons used", "Casualities by entity and type of injury"])
@@ -274,7 +285,6 @@ elif current_tab == "Exploratory Data Analysis":
     with tab1:
             fatalities_df_2 = fatalities_df[~fatalities_df['citizenship'].isin(['Jordanian', 'American'])]
             fatalities_df_2['citizenship'].value_counts()
-
             plt.figure(figsize=(10,6))
             sns.set(style = "white")
             plt.title('Deaths by nationality (Palestinian and Israeli)')
@@ -282,10 +292,8 @@ elif current_tab == "Exploratory Data Analysis":
             plt.ylabel("fatalities")
             plt.xticks(rotation = 0, fontsize=10)
             plt.yticks(rotation = 45, fontsize=10)
-
             custom_palette = sns.color_palette("viridis", n_colors=2)
             plot1 = sns.countplot(x='citizenship', data = fatalities_df_2, palette = custom_palette, hue='citizenship', legend=False)
-
             for p in plot1.patches:
                 plot1.annotate(f'{p.get_height():.0f}', (p.get_x() + p.get_width() / 2., p.get_height()),
                             ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
@@ -298,20 +306,17 @@ elif current_tab == "Exploratory Data Analysis":
     with tab2:
             killed_count = fatalities_df['killed_by'].value_counts()
             plt.figure(figsize=(10, 6))
-            custom_palette = sns.color_palette("viridis")
+            custom_palette = sns.color_palette("viridis", n_colors=3)
             sns.set(style = "white")
             plt.title('Victims for perpetrators of killings')
             plt.xlabel('Responsible for the killings')
             plt.ylabel('Total casualties')
             plt.xticks(rotation = 0, fontsize=10)
             plt.yticks(rotation = 45, fontsize=10)
-
             bars = plt.bar(killed_count.index, killed_count.values)
-
             for bar in bars:
                 yval = bar.get_height()
                 plt.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom', fontsize=8)
-
             plt.show()
             graph_image = plt_to_image(plt)
             st.image(graph_image)
@@ -322,14 +327,12 @@ elif current_tab == "Exploratory Data Analysis":
             ammunition_kll = fatalities_df_original['ammunition'].value_counts()
             plt.figure(figsize=(10, 6))
             sns.set(style="white", palette="Set2")
-
             ax1 = ammunition_kll.head(10).plot(kind='bar')
             plt.title('Most used weapons in conflict')
-            plt.xlabel('Weapons')
+            plt.xlabel('')
             plt.ylabel('Deaths')
             plt.xticks(rotation=90, fontsize=10)
             plt.yticks(rotation=45, fontsize=10)
-
             for p in ax1.patches:
                 ax1.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
                             ha='center', va='center', xytext=(0, 10), textcoords='offset points', fontsize=8)
@@ -341,18 +344,14 @@ elif current_tab == "Exploratory Data Analysis":
             fatalities_df['casualty_count'] = 1
             killed_injury = fatalities_df.groupby(['killed_by', 'type_of_injury'])['casualty_count'].sum().reset_index()
             killed_injury_pivot = killed_injury.pivot(index='killed_by', columns='type_of_injury', values='casualty_count').fillna(0)
-            
             plt.figure(figsize=(10, 6))
-            sns.set(style = "white",  palette = sns.color_palette("viridis_r"))
-
+            sns.set(style = "white",  palette = sns.color_palette("Set2"))
             ax = killed_injury_pivot.plot(kind='bar', stacked=True)
-
             plt.title('Distribution of casualties by Entity and type of injury')
             plt.xlabel('Entity Responsible for Killings')
             plt.ylabel('Total Casualties')
             plt.xticks(rotation = 0, fontsize=10)
             plt.yticks(rotation = 45, fontsize=10)
-
             plt.legend(title='Type of Injury', bbox_to_anchor=(1.05, 1), loc='upper left')
             plt.show()
             graph_image = plt_to_image(plt)
@@ -360,13 +359,79 @@ elif current_tab == "Exploratory Data Analysis":
             st.write('from this chart it is clear that the Israelis mainly use modern weapons of war such as rockets and firearms, while the Palestinians still use more radical methods such as explosive belts and edged weapons to counterattack.')        
 
 
-##################################### Gender graphs
 
-    st.subheader('Gender graphs')
+
+
+
+
+
+
+
+##################################### Gender graphs
+    st.divider()
+    st.subheader('Data on biological sex of victims')
+
+    tab1, tab2, tab3 = st.tabs(["Violin", "Gender differences", "Distribution"])
+    
+    with tab1:
+        plt.figure(figsize=(10, 6))
+        plt.title('Fatalities by Age vs. Gender')
+        plt.xlabel('ages')
+        plt.ylabel(None)
+        plt.xticks(rotation = 0, fontsize=10)
+        sns.set(style="white")
+        custom_palette = sns.color_palette("viridis", n_colors=2)
+        sns.violinplot(data=fatalities_df, x="age", y='gender', hue = "gender", palette = custom_palette, legend=True)
+        plt.legend(title='Gender')
+        plt.grid(True, axis='x')
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+
+    with tab2:
+        plt.figure(figsize=(10, 6))
+        sns.set(style="white", palette="Set1")
+        plt.title("Fatalities by age and gender during the conflict")
+        plt.xlabel("Age")
+        plt.ylabel("Deaths")
+        plt.legend(['Woman', 'Man'])
+        plt.xticks(rotation = 0, fontsize=10)
+        plt.yticks(rotation = 0, fontsize=10)
+        ax = sns.histplot(data=fatalities_df, x='age', hue='gender', bins=28)
+        for p in ax.patches:
+            height = p.get_height()
+            if not pd.isna(height):
+                ax.text(p.get_x() + p.get_width() / 2., height, f'{height:.0f}', ha='center', va='bottom', fontsize=8)
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+    
+    with tab3:
+        plt.figure(figsize=(10, 6))
+        sns.set(style="white", palette="Set2")
+        sns.histplot(fatalities_df['age'], kde=True)
+        plt.title('Age Distribution of victims during the conflict')
+        plt.xlabel('Age')
+        plt.ylabel("Deaths")
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+
+
+
+
+
+
+
+
+
+
+
 
 
 ##################################### WordCloud graphs
-    st.subheader('WordCloud graph')
+    st.divider()
+    st.subheader("WordCloud graph on dataset's note")
     
     words_in_note = ''.join(fatalities_df['notes'].astype(str))
     wordcloud = WordCloud(width=1200, height=800,
@@ -382,37 +447,42 @@ elif current_tab == "Exploratory Data Analysis":
 
 
 
-##################################### Location graphs
 
+
+
+
+
+
+
+##################################### Location graphs
+    st.divider()
     st.subheader('Location graphs')
     
     top_locations = fatalities_df['event_location'].value_counts().index[:20]
     filtered_df = fatalities_df[fatalities_df['event_location'].isin(top_locations)]
     location_counts = filtered_df['event_location'].value_counts()
-
     plt.figure(figsize=(10, 6))
     plt.title('Regions with the most recorded deaths (2000-2023)')
     plt.ylabel('Region')
     plt.xlabel('Deaths')
     plt.xticks(rotation=0, fontsize=10)
     plt.yticks(rotation=0, fontsize=10)
-
     custom_palette = sns.color_palette("inferno", n_colors=20)
     sns.barplot(x=location_counts.values,
                 y=location_counts.index,
                 palette=custom_palette,
                 hue=location_counts.index,
                 legend=False)
-
     for i, v in enumerate(location_counts.values):
         plt.text(v + 10, i, str(v), color='black', ha='left', va='center', fontsize=9)
-
     plt.tight_layout()
     plt.grid(True, axis='x')
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
-    
+
+
+
     ### Folium chart
     
     district_coords = {
@@ -427,9 +497,7 @@ elif current_tab == "Exploratory Data Analysis":
     'Rafah': [31.296866, 34.245536],
     'Khan Yunis': [31.346201, 34.306286]
     }
-    
     district_fatalities = fatalities_df.groupby('event_location_district').size()
-    
     def get_color(fatalities):
         if fatalities > 500:
             return 'red'
@@ -439,16 +507,12 @@ elif current_tab == "Exploratory Data Analysis":
             return 'yellow'
         else:
             return 'green'
-    
     base_map = folium.Map(location=[32, 34.75], zoom_start=8)
-    
     for district, coords in district_coords.items():
         fatalities = district_fatalities.get(district, 0)
         folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
         folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
-
     folium.LayerControl().add_to(base_map)
-
     st.data = st_folium(base_map, width=800, height=600)
     
 
