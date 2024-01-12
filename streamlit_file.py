@@ -540,8 +540,8 @@ elif current_tab == "Exploratory Data Analysis":
 
 
 
-elif current_tab == "Modelling":
-    st.header("Modelling")
+elif current_tab == "Modeling":
+    st.header("Modeling")
 
 
 
@@ -562,5 +562,3 @@ elif current_tab == "Modelling":
 
 
 ########################################### test
-
-
