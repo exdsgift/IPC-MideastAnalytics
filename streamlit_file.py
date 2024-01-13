@@ -1,3 +1,4 @@
+
 ########################################### Packages
 
 import streamlit as st
@@ -12,13 +13,15 @@ from wordcloud import WordCloud
 from io import BytesIO
 from streamlit_folium import st_folium
 from streamlit_folium import folium_static
+
 ########################################### Import Dataset and set tabs
 
 fatalities_df = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
-tab_names = ["Introduction", "Cleaning and Correlation", "Exploratory Data Analysis", "Modelling"]
+tab_names = ["Introduction", "Cleaning and Correlation", "Exploratory Data Analysis", "Modeling"]
 current_tab = st.sidebar.selectbox("Summary", tab_names)
 
-########################################### Main Titles and introduction
+####################################################################################### INTRODUCTION
+
 if current_tab == "Introduction":
     st.markdown("<h1 style='text-align: center;'>Exploring Terrorism Victim Data: A Look into the Israeli-Palestinian Conflict</h1>", unsafe_allow_html=True)
     st.subheader('Programming and Database Final Project')
@@ -42,7 +45,6 @@ if current_tab == "Introduction":
     else:
         st.dataframe(fatalities_df.head(51))
     
-    
 ########################################### From plt to image function, design def function
 
     def plt_to_image(plt):
@@ -53,7 +55,8 @@ if current_tab == "Introduction":
 
     graph_image = plt_to_image(plt)
 
-########################################### insert containers using with to add graphs
+####################################################################################### CLEANING AND CORRELATION
+
 elif current_tab == "Cleaning and Correlation": 
     st.title("Cleaning and Correlation")
    
@@ -62,7 +65,6 @@ elif current_tab == "Cleaning and Correlation":
     
     tab1, tab2, tab3, tab4 = st.tabs(["NA's values", "Cleaning", "-", "-"]) 
     
-    #####################################
     with tab1:
     
         columns_to_check = ['age', 'gender', 'took_part_in_the_hostilities', 'place_of_residence', 'place_of_residence_district', 'type_of_injury', 'ammunition', 'notes']
@@ -78,8 +80,8 @@ elif current_tab == "Cleaning and Correlation":
                 - **Replace** missing values for the variable **age** with the **mean value** (1.16%).
                 - Missing values for the variables **sex**, **place_of_residence**, **place_of_residence_district**, **type_of_location**, and **notes** are **replaced** with the **mode value**. this is so as not to change the distribution of the data too much.
                 - **Remove** the variables **has_participated_in_hostilities**, **ammunition** from the variable itself. The percentage of null values is excessive and would not lead to useful information for the entire population of the dataset.
-                                ''')
-    
+                                ''')    
+############################################
     
     st.divider() 
     st.subheader('Check Correlation using scatterplots')
@@ -158,6 +160,7 @@ elif current_tab == "Cleaning and Correlation":
             - from the third graph we can see that Palestinian casualties far outnumber Israeli casualties. This phenomenon, though, was not so obvious at the beginning of the conflict, where it would in fact appear to be the reverse
             - from the last graph instead, it shows how most of the casualties were caused by Israeli security forces, while Palestinian citizens killed many Israelis early in the war when they rebelled against the Israeli government's expansionist policy.
              ''')
+    
 ########################################### insert code of encoding and add the graph
     st.divider()
     st.subheader('Correlation by encoding categorical variables')
@@ -187,17 +190,8 @@ elif current_tab == "Cleaning and Correlation":
     heatmap.set_yticklabels(heatmap.get_yticklabels(), fontsize=8)
     plt.xticks(rotation=45, ha="right")
     st.pyplot(fig)
-    
 
-
-
-
-
-
-
-
-
-##################################### new tab, adding fun
+####################################################################################### EDA
 elif current_tab == "Exploratory Data Analysis":
     st.title("Exploratory Data Analysis")
     
@@ -243,7 +237,6 @@ elif current_tab == "Exploratory Data Analysis":
     for i, txt in enumerate(palestinian_fatalities_by_year['palestinian_fatalities']):
         plt.annotate(txt, (palestinian_fatalities_by_year['year'][i], txt), textcoords="offset points", xytext=(0, 5), ha='center', color='black', fontsize = 9)
 
-
     israeli_data = fatalities_df[fatalities_df['citizenship'] == 'Israeli']
     israeli_fatalities_by_year = israeli_data.groupby('year').size().reset_index(name='israeli_fatalities')
     sns.lineplot(x='year',
@@ -260,28 +253,18 @@ elif current_tab == "Exploratory Data Analysis":
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 ##################################### Nationalities graphs
+
     st.divider()
     st.subheader('Data on the nationality of the victims and murderers')
     st.write('The first variables to be examined, were those inherent in the nationality of the victims and perpetrators. This is used to get an initial idea of the forces deployed by both countries.')
     
-### tabs
+##################################### tabs
+
     tab1, tab2, tab3, tab4 = st.tabs(["Victims", "Perpetrators", "Weapons used", "Casualities by entity and type of injury"])
 
-### adding graphs for these tabs    
+##################################### adding graphs for these tabs    
     with tab1:
             fatalities_df_2 = fatalities_df[~fatalities_df['citizenship'].isin(['Jordanian', 'American'])]
             fatalities_df_2['citizenship'].value_counts()
@@ -358,15 +341,6 @@ elif current_tab == "Exploratory Data Analysis":
             st.image(graph_image)
             st.caption('From this chart it is clear that the Israelis mainly use modern weapons of war such as rockets and firearms, while the Palestinians still use more radical methods such as explosive belts and edged weapons to counterattack.')        
 
-
-
-
-
-
-
-
-
-
 ##################################### Gender graphs
     st.divider()
     st.subheader('Data on biological sex of victims')
@@ -417,20 +391,10 @@ elif current_tab == "Exploratory Data Analysis":
         plt.show()
         graph_image = plt_to_image(plt)
         st.image(graph_image)
-
-
-
-
-
-
-
-
-
-
-
-
+    st.caption('From this information, it can be guessed that men are more exposed in this conflict than women, although the latter have a more even distribution of deaths by age group.')
 
 ##################################### WordCloud graphs
+
     st.divider()
     st.subheader("WordCloud graph on dataset's note")
     
@@ -444,21 +408,13 @@ elif current_tab == "Exploratory Data Analysis":
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
-    st.write('The graph you will see below is a WordCloud, which is a visual way to represent the most frequent words in a given dataset. In this case, the WordCloud was created based on the variable "Notes." This variable contains information about the dynamics of conflict-related deaths, and the largest words in the are those that appear most frequently in the notes. This can help to quickly identify the most common themes or terms associated with the dynamics of deaths in the conflict.')
-
-
-
-
-
-
-
-
-
+    st.write('This graph is a WordCloud, which is a visual way to represent the most frequent words in a given dataset. In this case, the WordCloud was created based on the variable "Notes." This variable contains information about the dynamics of conflict-related deaths, and the largest words in the are those that appear most frequently in the notes. This can help to quickly identify the most common themes or terms associated with the dynamics of deaths in the conflict.')
 
 ##################################### Location graphs
+
     st.divider()
-    st.subheader('Location graphs')
-    
+    st.subheader('Location data and Folium Map')
+    st.write('By having data on the location where the deaths occurred, it was studied which areas were affected by urban guerrilla warfare. Then after determining which were the most affected by the conflict, using the coordinates and the folium package, a chart was created containing the map with the hazard areas according to the deaths.')
     top_locations = fatalities_df['event_location'].value_counts().index[:20]
     filtered_df = fatalities_df[fatalities_df['event_location'].isin(top_locations)]
     location_counts = filtered_df['event_location'].value_counts()
@@ -482,76 +438,193 @@ elif current_tab == "Exploratory Data Analysis":
     graph_image = plt_to_image(plt)
     st.image(graph_image)
 
-
-
-    ### Folium chart
+    ##################################### Folium chart
+    st.write('Reporated on the map are the 10 cities most affected by the conflict derived from the graph above.')
     
-    district_coords = {
-    'Gaza': [31.5, 34.466667],
-    'Hebron': [31.532569, 35.095388],
-    'Jenin': [32.457336, 35.286865],
-    'Nablus': [32.221481, 35.254417],
-    'Ramallah': [31.902922, 35.206209],
-    'Bethlehem': [31.705791, 35.200657],
-    'Tulkarm': [32.308628, 35.028537],
-    'Jericho': [31.857163, 35.444362],
-    'Rafah': [31.296866, 34.245536],
-    'Khan Yunis': [31.346201, 34.306286]
-    }
-    district_fatalities = fatalities_df.groupby('event_location_district').size()
-    def get_color(fatalities):
-        if fatalities > 500:
-            return 'red'
-        elif fatalities > 250:
-            return 'orange'
-        elif fatalities > 100:
-            return 'yellow'
-        else:
-            return 'green'
-    base_map = folium.Map(location=[32, 34.75], zoom_start=8)
-    for district, coords in district_coords.items():
-        fatalities = district_fatalities.get(district, 0)
-        folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
-        folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
-    folium.LayerControl().add_to(base_map)
-    st.data = st_folium(base_map, width=800, height=480)
+    tab1, tab2 = st.tabs(["Folium chart", "Script"])
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    with tab2:
+        st.code('''
+            from streamlit_folium import st_folium
+            from streamlit_folium import folium_static
+            
+            # color selection
+            
+            def get_color(fatalities):
+                if fatalities > 500:
+                    return 'red'
+                elif fatalities > 250:
+                    return 'orange'
+                elif fatalities > 100:
+                    return 'yellow'
+                else:
+                    return 'green'
+            
+            # build up the graph
+            
+            base_map = folium.Map(location=[32, 34.75], zoom_start=8)
+            for district, coords in district_coords.items():
+                fatalities = district_fatalities.get(district, 0)
+                folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
+                folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
+            folium.LayerControl().add_to(base_map)
+            st.data = st_folium(base_map, width=800, height=480)
+            ''')
+    
+    with tab1:
+        district_coords = {
+        'Gaza': [31.5, 34.466667],
+        'Hebron': [31.532569, 35.095388],
+        'Jenin': [32.457336, 35.286865],
+        'Nablus': [32.221481, 35.254417],
+        'Ramallah': [31.902922, 35.206209],
+        'Bethlehem': [31.705791, 35.200657],
+        'Tulkarm': [32.308628, 35.028537],
+        'Jericho': [31.857163, 35.444362],
+        'Rafah': [31.296866, 34.245536],
+        'Khan Yunis': [31.346201, 34.306286]
+        }
+        district_fatalities = fatalities_df.groupby('event_location_district').size()
+        def get_color(fatalities):
+            if fatalities > 500:
+                return 'red'
+            elif fatalities > 250:
+                return 'orange'
+            elif fatalities > 100:
+                return 'yellow'
+            else:
+                return 'green'
+        base_map = folium.Map(location=[32, 34.75], zoom_start=8)
+        for district, coords in district_coords.items():
+            fatalities = district_fatalities.get(district, 0)
+            folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
+            folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
+        folium.LayerControl().add_to(base_map)
+        st.data = st_folium(base_map, width=800, height=480)
+        
+####################################################################################### MODELING
 
 elif current_tab == "Modeling":
     st.header("Modeling")
+    
+########################################### PCA Analysis
+
+    from sklearn.linear_model import LinearRegression
+    from sklearn.decomposition import PCA
+    
+    def plt_to_image(plt):
+        buf = BytesIO()
+        plt.savefig(buf, format='png', bbox_inches='tight')
+        buf.seek(0)
+        return buf
+    st.subheader('PCA Analysis using Categorical Values')
+    st.write('Principal Component Analysis (PCA) is a dimensionality reduction technique that is often used to simplify data while retaining the most meaningful information.')
+    
+    fatalities_df = pd.read_csv('fatalities_isr_pse_conflict_2000_to_2023.csv')
+    age_mean = fatalities_df['age'].mean()
+    fatalities_df['age'].fillna(age_mean, inplace=True)
+    gender_mode = fatalities_df['gender'].mode()[0]
+    fatalities_df['gender'].fillna(gender_mode, inplace=True)
+    place_of_residence_mode = fatalities_df['place_of_residence'].mode()[0]
+    fatalities_df['place_of_residence'].fillna(place_of_residence_mode, inplace=True)
+    place_of_residence_district_mode = fatalities_df['place_of_residence_district'].mode()[0]
+    fatalities_df['place_of_residence_district'].fillna(place_of_residence_district_mode, inplace=True)
+    type_of_injury_mode = fatalities_df['type_of_injury'].mode()[0]
+    fatalities_df['type_of_injury'].fillna(type_of_injury_mode, inplace=True)
+    notes_mode = fatalities_df['notes'].mode()[0]
+    fatalities_df['notes'].fillna(notes_mode, inplace=True)
+    fatalities_df.drop(['took_part_in_the_hostilities', 'ammunition'], axis=1, inplace=True)
+    import copy
+    data = copy.deepcopy(fatalities_df)
+    cat_cols = ['citizenship', 'event_location','event_location_district', 'event_location_region','gender', 
+            'place_of_residence','place_of_residence_district', 'type_of_injury','killed_by']
+    for x in cat_cols:
+        print("column",x,"has nulls:",data[x].hasnans,",count:",data[x].isnull().sum())
+        data[x+"_cat"] = pd.CategoricalIndex(data[x]).codes
+    mydata= data[['citizenship_cat', 'event_location_cat',
+        'event_location_district_cat', 'event_location_region_cat',
+        'gender_cat', 'place_of_residence_cat',
+        'place_of_residence_district_cat', 'type_of_injury_cat',
+        'killed_by_cat']]
+    components_range=range(1,len(mydata.columns)+1)
+    for n in components_range:
+        pca = PCA(n_components=n)
+        pca.fit(mydata)
+        print(n,"components, variance ratio=",pca.explained_variance_ratio_)
+
+    pca = PCA(n_components=len(mydata.columns))
+    pca.fit(mydata)
+
+    pca = PCA(n_components=len(mydata.columns))
+    pca.fit(mydata)
+
+    explained_variance=pca.explained_variance_ratio_
+    cumulative_explained_variance=np.cumsum(pca.explained_variance_ratio_)
+
+    plt.plot(components_range, explained_variance,marker='o', label='Explained Variance per Component')
+
+    plt.plot(components_range, cumulative_explained_variance,marker='+', label='Cumulative Explained Variance')
+
+    plt.xlabel('Number of Components')
+    plt.ylabel('Explained Variance Ratio')
+    plt.title('Elbow Diagram for fatalities PCA')
+    plt.legend()
+
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+    graph_image = plt_to_image(plt)
+    st.image(graph_image)
+
+    st.write('The elbow plot shows how much of the total variance is explained by the first N principal components. In this case, assigning a value of 0.95 to the variance, the N number of principal components is 1.')
+    target_variance_ratio = 0.95
+    num_components_to_keep = np.argmax(explained_variance >= target_variance_ratio) + 1
+    st.write('Numbers of N principal components:',num_components_to_keep)
+    
+########################################### KMeans    
+
+    st.subheader('K-means Clustering')
+    
+    pca = PCA(n_components=2)
+    pca.fit(mydata)
+    pca_data=pca.fit_transform(mydata)
+    
+
+    
 
 
 
+    from sklearn.cluster import KMeans
 
+    kmeans_2 = KMeans(n_clusters=2, random_state=42)
+    kmeans_2.fit(mydata)
+    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_2.labels_, cmap='viridis')
+    plt.xlabel('PCA 1')
+    plt.ylabel('PCA 2')
+    plt.title('K-means Clustering 2')
+    plt.scatter(kmeans_2.cluster_centers_[:, 0], kmeans_2.cluster_centers_[:, 1], s=80, c='black', marker='x')
+    plt.show()
+    graph_image = plt_to_image(plt)
+    st.image(graph_image)
 
+    from sklearn.metrics import silhouette_score
+    silhouette_result = silhouette_score(mydata, kmeans_2.labels_)
+    st.write("Evaluation for 2 clusters on data:", silhouette_result)
 
+    kmeans_3 = KMeans(n_clusters=3, random_state=42)
+    kmeans_3.fit(mydata)
+    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_3.labels_, cmap='viridis')
+    plt.xlabel('PCA 1')
+    plt.ylabel('PCA 2')
+    plt.title('K-means Clustering 3')
 
-
-
-
+    # Optionally plot cluster centroids
+    plt.scatter(kmeans_3.cluster_centers_[:, 0], kmeans_3.cluster_centers_[:, 1], s=80, c='black', marker='x')
+    plt.show()
+    graph_image = plt_to_image(plt)
+    st.image(graph_image)
+    silhouette_result = silhouette_score(mydata, kmeans_3.labels_)
+    st.write("Evaluation for 3 clusters on data:", silhouette_result)
 
 
 
