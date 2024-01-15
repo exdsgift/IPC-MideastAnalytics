@@ -17,9 +17,14 @@ from streamlit_folium import folium_static
 ########################################### Import Dataset and set tabs
 
 fatalities_df = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
-tab_names = ["Introduction", "Cleaning and Correlation", "Exploratory Data Analysis", "Modeling"]
+tab_names = ["Introduction", "Cleaning and Correlation", "Exploratory Data Analysis", "Modeling with ML algorithms"]
 current_tab = st.sidebar.selectbox("Summary", tab_names)
-
+st.sidebar.markdown(
+    """
+    **Gabriele Durante**  
+    [GitHub](https://github.com/exdsgift)  [LinkedIn](https://www.linkedin.com/in/gabrieledurante/)  [gabriele.durante@studenti.univr.it](mailto:gabriele.durante@studenti.univr.it)
+    """
+)
 ####################################################################################### INTRODUCTION
 
 if current_tab == "Introduction":
@@ -465,8 +470,16 @@ elif current_tab == "Exploratory Data Analysis":
             base_map = folium.Map(location=[32, 34.75], zoom_start=8)
             for district, coords in district_coords.items():
                 fatalities = district_fatalities.get(district, 0)
-                folium.Marker(location = coords, tooltip = f'District: {district}, Deaths: {fatalities}', icon = None).add_to(base_map)
-                folium.Circle(location=coords, radius=np.sqrt(fatalities) * 1200, color=get_color(fatalities), fill=True, fill_color=get_color(fatalities), fill_opacity=0.6,).add_to(base_map)
+                folium.Marker(location = coords,
+                tooltip = f'District: {district},
+                Deaths: {fatalities}',
+                icon = None).add_to(base_map)
+                folium.Circle(location=coords,
+                radius=np.sqrt(fatalities) * 1200,
+                color=get_color(fatalities),
+                fill=True,
+                fill_color=get_color(fatalities),
+                fill_opacity=0.6,).add_to(base_map)
             folium.LayerControl().add_to(base_map)
             st.data = st_folium(base_map, width=800, height=480)
             ''')
@@ -504,13 +517,16 @@ elif current_tab == "Exploratory Data Analysis":
         
 ####################################################################################### MODELING
 
-elif current_tab == "Modeling":
-    st.header("Modeling")
+elif current_tab == "Modeling with ML algorithms":
+    st.header("Modeling using Machine Learning algorithms")
     
 ########################################### PCA Analysis
 
     from sklearn.linear_model import LinearRegression
     from sklearn.decomposition import PCA
+    from sklearn.cluster import KMeans
+    
+    st.write('Having almost exclusively categorical variables in the dataset, the data relating to the encoding of the categorical variables were used in the modeling phase. They were first processed through PCA Analysis to reduce the size of the data, and then processed through the KMeans clustering algorithm to identify groups based on similarities.')
     
     def plt_to_image(plt):
         buf = BytesIO()
@@ -534,6 +550,9 @@ elif current_tab == "Modeling":
     notes_mode = fatalities_df['notes'].mode()[0]
     fatalities_df['notes'].fillna(notes_mode, inplace=True)
     fatalities_df.drop(['took_part_in_the_hostilities', 'ammunition'], axis=1, inplace=True)
+    
+    ######
+    
     import copy
     data = copy.deepcopy(fatalities_df)
     cat_cols = ['citizenship', 'event_location','event_location_district', 'event_location_region','gender', 
@@ -551,85 +570,122 @@ elif current_tab == "Modeling":
         pca = PCA(n_components=n)
         pca.fit(mydata)
         print(n,"components, variance ratio=",pca.explained_variance_ratio_)
-
+        
+    ######
+    
     pca = PCA(n_components=len(mydata.columns))
     pca.fit(mydata)
-
-    pca = PCA(n_components=len(mydata.columns))
-    pca.fit(mydata)
-
     explained_variance=pca.explained_variance_ratio_
     cumulative_explained_variance=np.cumsum(pca.explained_variance_ratio_)
-
     plt.plot(components_range, explained_variance,marker='o', label='Explained Variance per Component')
-
     plt.plot(components_range, cumulative_explained_variance,marker='+', label='Cumulative Explained Variance')
-
     plt.xlabel('Number of Components')
     plt.ylabel('Explained Variance Ratio')
     plt.title('Elbow Diagram for fatalities PCA')
     plt.legend()
-
     plt.grid(True)
     plt.tight_layout()
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
 
-    st.write('The elbow plot shows how much of the total variance is explained by the first N principal components. In this case, assigning a value of 0.95 to the variance, the N number of principal components is 1.')
-    target_variance_ratio = 0.95
-    num_components_to_keep = np.argmax(explained_variance >= target_variance_ratio) + 1
-    st.write('Numbers of N principal components:',num_components_to_keep)
+    st.write('The elbow graph shows how much of the total variance is explained by the first N principal components. In this case, the N number of principal components is 2.')
     
 ########################################### KMeans    
 
     st.subheader('K-means Clustering')
-    
+    st.write('To evaluate the actual effectiveness of the clustering algorithm, we examine the silhouette coefficient to evaluate the cohesion [-1, 1].')
+   
     pca = PCA(n_components=2)
     pca.fit(mydata)
     pca_data=pca.fit_transform(mydata)
-    
-
-    
-
-
-
-    from sklearn.cluster import KMeans
-
-    kmeans_2 = KMeans(n_clusters=2, random_state=42)
+   
+    kmeans_2 = KMeans(n_clusters=2, random_state=20)
     kmeans_2.fit(mydata)
-    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_2.labels_, cmap='viridis')
+    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_2.labels_, cmap='Accent')
     plt.xlabel('PCA 1')
     plt.ylabel('PCA 2')
     plt.title('K-means Clustering 2')
     plt.scatter(kmeans_2.cluster_centers_[:, 0], kmeans_2.cluster_centers_[:, 1], s=80, c='black', marker='x')
+    plt.legend().set_visible(False)
     plt.show()
     graph_image = plt_to_image(plt)
     st.image(graph_image)
 
     from sklearn.metrics import silhouette_score
     silhouette_result = silhouette_score(mydata, kmeans_2.labels_)
-    st.write("Evaluation for 2 clusters on data:", silhouette_result)
+    st.write("Silhouette coefficient for 2 clusters on data:", silhouette_result)
+    st.write('Using N = 2 as the number of clusters as suggested by the analysis done earlier, we note how the coefficient si silhouette acquires a high average value.')
 
-    kmeans_3 = KMeans(n_clusters=3, random_state=42)
-    kmeans_3.fit(mydata)
-    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_3.labels_, cmap='viridis')
-    plt.xlabel('PCA 1')
-    plt.ylabel('PCA 2')
-    plt.title('K-means Clustering 3')
+    st.divider()
+    st.subheader('Finding the best silhouette coefficient using loops.')
+    st.write('By using a loop, numerous attempts can be made in order to find the number of clusters that maximizes the coefficient. Only a few tests are given below (maximum value N = 1000), as the computational power using too high values of N is too much.')
+    
+    tab1, tab2, tab3 = st.tabs(["PCA100", "PCA1000", 'Loop script'])
 
-    # Optionally plot cluster centroids
-    plt.scatter(kmeans_3.cluster_centers_[:, 0], kmeans_3.cluster_centers_[:, 1], s=80, c='black', marker='x')
-    plt.show()
-    graph_image = plt_to_image(plt)
-    st.image(graph_image)
-    silhouette_result = silhouette_score(mydata, kmeans_3.labels_)
-    st.write("Evaluation for 3 clusters on data:", silhouette_result)
+    with tab1:
+        kmeans_100 = KMeans(n_clusters=100, random_state=20)
+        kmeans_100.fit(mydata)
+        plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_100.labels_, cmap='Set2')
+        plt.xlabel('PCA 1')
+        plt.ylabel('PCA 2')
+        plt.title('K-means Clustering 100')
 
+        # cluster centroids
+        plt.scatter(kmeans_100.cluster_centers_[:, 0], kmeans_100.cluster_centers_[:, 1], s=80, c='black', marker='x')
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+        silhouette_result = silhouette_score(mydata, kmeans_100.labels_)
+        st.write("Silhouette coefficient for 100 clusters on data:", silhouette_result)
+    
+    with tab2:
+        kmeans_1000 = KMeans(n_clusters=1000, random_state=20)
+        kmeans_1000.fit(mydata)
+        plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_1000.labels_, cmap='Set2')
+        plt.xlabel('PCA 1')
+        plt.ylabel('PCA 2')
+        plt.title('K-means Clustering 1000')
 
+        # cluster centroids
+        plt.scatter(kmeans_1000.cluster_centers_[:, 0], kmeans_1000.cluster_centers_[:, 1], s=80, c='black', marker='x')
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+        silhouette_result = silhouette_score(mydata, kmeans_1000.labels_)
+        st.write("Silhouette coefficient for 1000 clusters on data:", silhouette_result)
+    
+    with tab3:
+        st.code('''
+                # Set the maximum number of clusters you wish to explore.
+                max_clusters = 1000
 
+                # Initialize variables to keep track of the best results:
+                best_num_clusters = 2  # Start with a reasonable value
+                best_silhouette_score = -1  # Initialize with an impossible value
 
+                # find the value using loop
+                for num_clusters in range(2, max_clusters + 1):
+                    kmeans = KMeans(n_clusters=num_clusters, random_state=20) # the random state number is arbitrarial but for different tests it has to be the same (centroids locations)
+                    kmeans_labels = kmeans.fit_predict(mydata)
+                    silhouette_avg = silhouette_score(mydata, kmeans_labels)
+                    
+                    # Update if the loop find a better solution
+                    if silhouette_avg > best_silhouette_score:
+                        best_silhouette_score = silhouette_avg
+                        best_num_clusters = num_clusters
 
+                print(f"The maximum number of clusters with the best silhouette coefficient is: {best_num_clusters}")
+                print(f"Associated silhouette coeficient: {best_silhouette_score}")
+                
+                ### with max_cluserts = 10, the coefficent is equal to 0.5831316118613485 and the max number is 2
+                ### with max_clusters = 100, the coefficient is equal to 0.7148252056599078 and the max numnber is 100
+                ''')
+    st.write('''
+            By analyzing the results obtained from the K-means model using a loop cycle, we identified an optimal number of clusters of 1000, accompanied by a significant silhouette coefficient of 0.71.
+
+            The high silhouette coefficient suggests a valid separation between clusters and internal consistency. The numerosity of the clusters, however, raises questions about the true complexity of the data.
+             ''')
 
 
 
