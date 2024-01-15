@@ -1,9 +1,7 @@
 ## Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
----
-Final project for the "Programming and Databases" course. This repository has been created to showcase a comprehensive analysis of terrorism victim data within the Israeli-Palestinian conflict. Below is an overview of the project, divided into three main phases: dataset cleaning, exploratory data analysis (EDA), and modeling using machine learning approaches.
+Final project for the "Programming and Databases" course. This repository has been created to showcase a comprehensive analysis of terrorism victim data within the Israeli-Palestinian conflict. Below is an overview of the project.
 
 ## Packages
----
 ### EDA:
 * `pandas`
 * `numpy`
@@ -19,7 +17,6 @@ Final project for the "Programming and Databases" course. This repository has be
 * `sklearn.metrics import silhouette_score`
 
 ## Repository Structure
----
 - **`Fatalities_Project.ipynb`**: Contains all the cleaning part of the dataset and exploratory data analysis
 - **`fatalities_isr_pse_conflict_2000_to_2023.csv`**: Contains the original dataset downloaded from Kaggle, use to replicate the results.
 - **`modeling.ipynb`**: It contains the data modeling part and related machine learning algorithms.
