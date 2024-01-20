@@ -14,7 +14,7 @@ from io import BytesIO
 from streamlit_folium import st_folium
 from streamlit_folium import folium_static
 
-########################################### Import Dataset and set tabs
+########################################### Import Dataset and set tabs for chapters
 
 fatalities_df = pd.read_csv('/Users/gabrieledurante/Documents/uni/data science UNIVR - Master Degree/programming/datasets _for _final_project/fatalities_isr_pse_conflict_2000_to_2023.csv')
 tab_names = ["Introduction", "Cleaning and Correlation", "Exploratory Data Analysis", "Modeling with ML algorithms"]
@@ -86,7 +86,7 @@ elif current_tab == "Cleaning and Correlation":
                 - Missing values for the variables **sex**, **place_of_residence**, **place_of_residence_district**, **type_of_location**, and **notes** are **replaced** with the **mode value**. this is so as not to change the distribution of the data too much.
                 - **Remove** the variables **has_participated_in_hostilities**, **ammunition** from the variable itself. The percentage of null values is excessive and would not lead to useful information for the entire population of the dataset.
                                 ''')    
-############################################
+############################################ add graphs from the EDA side (same code)
     
     st.divider() 
     st.subheader('Check Correlation using scatterplots')
@@ -196,7 +196,7 @@ elif current_tab == "Cleaning and Correlation":
     plt.xticks(rotation=45, ha="right")
     st.pyplot(fig)
 
-####################################################################################### EDA
+####################################################################################### EDA, introduction of this part and adding the global trend graph
 elif current_tab == "Exploratory Data Analysis":
     st.title("Exploratory Data Analysis")
     
@@ -265,7 +265,7 @@ elif current_tab == "Exploratory Data Analysis":
     st.subheader('Data on the nationality of the victims and murderers')
     st.write('The first variables to be examined, were those inherent in the nationality of the victims and perpetrators. This is used to get an initial idea of the forces deployed by both countries.')
     
-##################################### tabs
+##################################### definig tabs for this chapter
 
     tab1, tab2, tab3, tab4 = st.tabs(["Victims", "Perpetrators", "Weapons used", "Casualities by entity and type of injury"])
 
@@ -443,7 +443,7 @@ elif current_tab == "Exploratory Data Analysis":
     graph_image = plt_to_image(plt)
     st.image(graph_image)
 
-    ##################################### Folium chart
+    ##################################### Folium chart and code
     st.write('Reporated on the map are the 10 cities most affected by the conflict derived from the graph above.')
     
     tab1, tab2 = st.tabs(["Folium chart", "Script"])
@@ -520,7 +520,7 @@ elif current_tab == "Exploratory Data Analysis":
 elif current_tab == "Modeling with ML algorithms":
     st.header("Modeling using Machine Learning algorithms")
     
-########################################### PCA Analysis
+########################################### PCA Analysis and uploading datasets variations
 
     from sklearn.linear_model import LinearRegression
     from sklearn.decomposition import PCA
@@ -591,7 +591,7 @@ elif current_tab == "Modeling with ML algorithms":
 
     st.write('The elbow graph shows how much of the total variance is explained by the first N principal components. In this case, the N number of principal components is 2.')
     
-########################################### KMeans    
+########################################### KMeans clusters analysis
 
     st.subheader('K-means Clustering')
     st.write('To evaluate the actual effectiveness of the clustering algorithm, we examine the silhouette coefficient to evaluate the cohesion [-1, 1].')
@@ -678,6 +678,7 @@ elif current_tab == "Modeling with ML algorithms":
                 print(f"The maximum number of clusters with the best silhouette coefficient is: {best_num_clusters}")
                 print(f"Associated silhouette coeficient: {best_silhouette_score}")
                 
+                ### with max_clusters = 1000, the coefficient is equal to 0.7939302027453841 and the max numnber is 1000 
                 ### with max_cluserts = 10, the coefficent is equal to 0.5831316118613485 and the max number is 2
                 ### with max_clusters = 100, the coefficient is equal to 0.7148252056599078 and the max numnber is 100
                 ''')
@@ -686,8 +687,3 @@ elif current_tab == "Modeling with ML algorithms":
 
             The high silhouette coefficient suggests a valid separation between clusters and internal consistency. The numerosity of the clusters, however, raises questions about the true complexity of the data.
              ''')
-
-
-
-
-########################################### test
