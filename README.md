@@ -6,7 +6,7 @@ This repository has been created to showcase a comprehensive analysis of terrori
 `pandas` `numpy` `matplotlib.pyplot` `seaborn` `folium` `worldcloud`
 
 ### ML:
-`sklearn.linear_model import LinearRegression` `sklearn.decomposition import PCA` `sklearn.cluster import KMeans` `sklearn.metrics import silhouette_score`
+`sklearn.linear_model` `sklearn.decomposition` `sklearn.cluster` `sklearn.metrics`
 
 ## Repository Structure
 - `Fatalities_Project.ipynb`: Contains all the cleaning part of the dataset and exploratory data analysis
