@@ -1,20 +1,12 @@
 ## Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
-Final project for the "Programming and Databases" course. This repository has been created to showcase a comprehensive analysis of terrorism victim data within the Israeli-Palestinian conflict. Below is an overview of the project.
+This repository has been created to showcase a comprehensive analysis of terrorism victim data within the Israeli-Palestinian conflict. Below is an overview of the project.
 
 ## Packages
 ### EDA:
-* `pandas`
-* `numpy`
-* `matplotlib.pyplot`
-* `seaborn`
-* `folium`
-* `worldcloud`
+`pandas` `numpy` `matplotlib.pyplot` `seaborn` `folium` `worldcloud`
 
 ### Modeling and Machine Learning:
-* `sklearn.linear_model import LinearRegression`
-* `sklearn.decomposition import PCA`
-* `sklearn.cluster import KMeans`
-* `sklearn.metrics import silhouette_score`
+`sklearn.linear_model import LinearRegression` `sklearn.decomposition import PCA` `sklearn.cluster import KMeans` `sklearn.metrics import silhouette_score`
 
 ## Repository Structure
 - **`Fatalities_Project.ipynb`**: Contains all the cleaning part of the dataset and exploratory data analysis
