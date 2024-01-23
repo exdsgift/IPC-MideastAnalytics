@@ -595,32 +595,53 @@ elif current_tab == "Modeling with ML algorithms":
 
     st.subheader('K-means Clustering')
     st.write('To evaluate the actual effectiveness of the clustering algorithm, we examine the silhouette coefficient to evaluate the cohesion [-1, 1].')
-   
-    pca = PCA(n_components=2)
-    pca.fit(mydata)
-    pca_data=pca.fit_transform(mydata)
-   
-    kmeans_2 = KMeans(n_clusters=2, random_state=20)
-    kmeans_2.fit(mydata)
-    plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_2.labels_, cmap='Accent')
-    plt.xlabel('PCA 1')
-    plt.ylabel('PCA 2')
-    plt.title('K-means Clustering 2')
-    plt.scatter(kmeans_2.cluster_centers_[:, 0], kmeans_2.cluster_centers_[:, 1], s=80, c='black', marker='x')
-    plt.legend().set_visible(False)
-    plt.show()
-    graph_image = plt_to_image(plt)
-    st.image(graph_image)
+  
+    tab1, tab2 = st.tabs(["PCA2", "PCA9"])
+    
+    with tab1:
+        pca = PCA(n_components=2)
+        pca.fit(mydata)
+        pca_data=pca.fit_transform(mydata)
+    
+        kmeans_2 = KMeans(n_clusters=2, random_state=20)
+        kmeans_2.fit(mydata)
+        plt.scatter(pca_data[:, 0], pca_data[:, 1], c=kmeans_2.labels_, cmap='Accent')
+        plt.xlabel('PCA 1')
+        plt.ylabel('PCA 2')
+        plt.title('K-means Clustering 2')
+        plt.legend().set_visible(False)
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
 
-    from sklearn.metrics import silhouette_score
-    silhouette_result = silhouette_score(mydata, kmeans_2.labels_)
-    st.write("Silhouette coefficient for 2 clusters on data:", silhouette_result)
-    st.write('Using N = 2 as the number of clusters as suggested by the analysis done earlier, we note how the coefficient si silhouette acquires a high average value.')
+        from sklearn.metrics import silhouette_score
+        silhouette_result = silhouette_score(mydata, kmeans_2.labels_)
+        st.write("Silhouette coefficient for 2 clusters on data:", silhouette_result)
+        st.write('Using N = 2 as the number of clusters as suggested by the analysis done earlier, we note how the coefficient si silhouette acquires a high average value.')
 
+
+    with tab2:
+        pca = PCA(n_components=9)
+        pca.fit(mydata)
+        pca_data9 = pca.fit_transform(mydata)
+        
+        kmeans_9 = KMeans(n_clusters=9, random_state=20, n_init=10)
+        kmeans_9.fit(mydata)
+        plt.scatter(pca_data9[:, 0], pca_data9[:, 1], c=kmeans_9.labels_, cmap='Set2')
+        plt.xlabel('Main component PCA1')
+        plt.ylabel('Main component PCA2')
+        plt.title('K-means Clustering (n = 9)')
+        plt.show()
+        graph_image = plt_to_image(plt)
+        st.image(graph_image)
+        silhouette_result = silhouette_score(mydata, kmeans_9.labels_)
+        st.write("Silhouette coefficient for 9 clusters on data:", silhouette_result)
+        st.write('Test to try the maximum number (9) of pca components and then setting 9 as the number of clusters.')
+    
     st.divider()
     st.subheader('Finding the best silhouette coefficient using loops.')
     st.write('By using a loop, numerous attempts can be made in order to find the number of clusters that maximizes the coefficient. Only a few tests are given below (maximum value N = 1000), as the computational power using too high values of N is too much.')
-    
+
     tab1, tab2, tab3 = st.tabs(["PCA100", "PCA1000", 'Loop script'])
 
     with tab1:
@@ -630,9 +651,6 @@ elif current_tab == "Modeling with ML algorithms":
         plt.xlabel('PCA 1')
         plt.ylabel('PCA 2')
         plt.title('K-means Clustering 100')
-
-        # cluster centroids
-        plt.scatter(kmeans_100.cluster_centers_[:, 0], kmeans_100.cluster_centers_[:, 1], s=80, c='black', marker='x')
         plt.show()
         graph_image = plt_to_image(plt)
         st.image(graph_image)
@@ -646,9 +664,6 @@ elif current_tab == "Modeling with ML algorithms":
         plt.xlabel('PCA 1')
         plt.ylabel('PCA 2')
         plt.title('K-means Clustering 1000')
-
-        # cluster centroids
-        plt.scatter(kmeans_1000.cluster_centers_[:, 0], kmeans_1000.cluster_centers_[:, 1], s=80, c='black', marker='x')
         plt.show()
         graph_image = plt_to_image(plt)
         st.image(graph_image)
