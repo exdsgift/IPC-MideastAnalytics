@@ -6,7 +6,7 @@ Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
 In the project directory, you can run:
 
 - `streamlit_file.py` ->
-  The project is built using `streamlit run` so this command Runs the app in Development mode. Open [http://localhost:8501](http://localhost:8501) to view it in the browser. You also need to run the server file as well to completely run the app. The page will reload if you make edits.
+  The project is built using `streamlit run` so this command Runs the presentation in local mode. Open [http://localhost:8501](http://localhost:8501) to view it in the browser. The page will reload if you make edits.
   You will also see any lint errors in the console.
 
 - `modeling.ipynb` ->
@@ -31,7 +31,7 @@ In the project directory, you can run:
 - [LinkedIn](https://www.linkedin.com/in/gabrieledurante/ "LinkedIn")
 - [Repo](https://github.com/Rohit19060/<IPC-MideastAnalytics> "<IPC-MideastAnalytics> Repo")
 
-## 🤝 Support
+### 🤝 Support
 
 Contributions, issues, and feature requests are welcome!
 
