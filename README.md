@@ -1,6 +1,8 @@
 # IPC-MideastAnalytics
 Exploring Terrorism Victim Data in the Israeli-Palestinian Conflict
 
+Final Grade: 30L
+
 ### Repository Structure
 
 In the project directory, you can run:
