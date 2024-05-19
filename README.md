@@ -33,8 +33,5 @@ In the project directory, you can run:
 - [LinkedIn](https://www.linkedin.com/in/gabrieledurante/ "LinkedIn")
 - [Repo](https://github.com/Rohit19060/<IPC-MideastAnalytics> "<IPC-MideastAnalytics> Repo")
 
-### 🤝 Support
+## Snapshots
 
-Contributions, issues, and feature requests are welcome!
-
-Give a ⭐️ if you like this project!
