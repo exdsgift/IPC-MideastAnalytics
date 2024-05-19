@@ -35,9 +35,7 @@ Gabriele Durante
 ## Snapshots
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output.png)
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output2.png)
-![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output3.png)
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output4.png)
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output5.png)
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output6.png)
-![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output7.png)
 ![test](https://github.com/exdsgift/IPC-MideastAnalytics/blob/main/images/output8.png)
