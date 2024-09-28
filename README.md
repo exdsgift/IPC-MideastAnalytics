@@ -17,13 +17,6 @@ In the project directory, you can run:
 - `Fatalities_Project.ipynb` ->
   Contains all the cleaning part of the dataset and exploratory data analysis
 
-### Model built With Sklearn
-
-- sklearn.linear_model
-- sklearn.decomposition
-- sklearn.cluster
-- sklearn.metrics
-
 ### Author:
 Gabriele Durante
 
